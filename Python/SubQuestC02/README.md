@@ -6,12 +6,12 @@
 # PRT(Peer Review Template)
 - [x]  **1. 주어진 문제를 해결하는 완성된 코드가 제출되었나요?**
     YES
-    ![Alt text](https://8888-wnzzhd4jcealb3qhj88q65sh1.container-server-prod.aiffel.io/view/aiffel/workplace/YooJin/Python/SubQuestC02/%EC%BD%94%EB%94%A9%EA%B2%B0%EA%B3%BC.jpg)
+    ![Alt text](./1231.png)
 - [x]  **2. 전체 코드에서 가장 핵심적이거나 가장 복잡하고 이해하기 어려운 부분에 작성된 
 주석 또는 doc string을 보고 해당 코드가 잘 이해되었나요?**
     제가 코딩을 하면서 이터레이터로 count를 할 생각은 못했는데 너무 훌륭하게 하심
     Doc string은 없으나 주석이 잘 달려있어서 이게 뭐에 관한 코드인지 잘 이해가 갔다.
-    ![Alt text](https://8888-wnzzhd4jcealb3qhj88q65sh1.container-server-prod.aiffel.io/view/aiffel/workplace/YooJin/Python/SubQuestC02/%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0%20%EC%83%9D%EC%84%B1.jpg)   
+    ![Alt text](./1202.png) 
 - [ ]  **3. 에러가 난 부분을 디버깅하여 문제를 해결한 기록을 남겼거나
 새로운 시도 또는 추가 실험을 수행해봤나요?**
      에러가 난 부분은 적지 않고 새로운 시도 또는 추가 실험은 말로써 설명을 들음
@@ -19,7 +19,7 @@
 - [ ]  **4. 회고를 잘 작성했나요?**
     회고가 잘 작성되었습니다. 아직 부족한 부분들이 많이 있다고 솔직하게 적어주셨습니다.
     권중님은 대단하십니다.
-    ![Alt text](https://8888-wnzzhd4jcealb3qhj88q65sh1.container-server-prod.aiffel.io/view/aiffel/workplace/YooJin/Python/SubQuestC02/%ED%9A%8C%EA%B3%A0%EB%A1%9D.jpg)
+    ![Alt text](./1203.png)
         
 - [ ]  **5. 코드가 간결하고 효율적인가요?**
     제가 실력이 부족해서 코드를 보고도 이해가 잘 안되는 부분이 있었지만 
