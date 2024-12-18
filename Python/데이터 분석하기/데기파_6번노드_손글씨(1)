@@ -1,0 +1,1292 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOw/R6z5hWs3oiRkCHLosX3",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Whatthe-we/AIFFEL_quest_cr/blob/master/Python/%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0/%EB%8D%B0%EA%B8%B0%ED%8C%8C_6%EB%B2%88%EB%85%B8%EB%93%9C_%EC%86%90%EA%B8%80%EC%94%A8(1)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "프로젝트 (1) load_digits : 손글씨 분류"
+      ],
+      "metadata": {
+        "id": "t9UV5lrM5bnH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 35,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "DPRlGu-9Enmd",
+        "outputId": "4d9b13de-5ee7-4f35-fd36-533fb09b1650"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "['DESCR', 'data', 'feature_names', 'frame', 'images', 'target', 'target_names']\n"
+          ]
+        }
+      ],
+      "source": [
+        "# 필요한 모듈 import하기\n",
+        "from sklearn.datasets import load_digits\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.metrics import classification_report\n",
+        "\n",
+        "# load_digits 메서드를 사용\n",
+        "digits = load_digits()\n",
+        "\n",
+        "print(dir(digits))"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "digits.keys()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jstyR5gzdAGC",
+        "outputId": "353d38ec-7c1c-4c1d-b4fd-f9eb952f8eca"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "dict_keys(['data', 'target', 'frame', 'feature_names', 'target_names', 'images', 'DESCR'])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Feature Data 지정하기\n",
+        "digits_data = digits.data\n",
+        "digits_data.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xWpdC23TdI15",
+        "outputId": "75b44735-128a-45dc-c8e4-1b0f61baf127"
+      },
+      "execution_count": 42,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(1797, 64)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 42
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Label Data 지정하기\n",
+        "digits_label = digits.target\n",
+        "digits_label.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xW7kz0W1gisf",
+        "outputId": "3f1c1580-9fbe-448c-f340-37e86ee3ae30"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(1797,)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "digits_data[0]"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "YtdNPLZfdbyb",
+        "outputId": "19677c60-10f2-4696-d09d-d009510d046b"
+      },
+      "execution_count": 33,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([ 0.,  0.,  5., 13.,  9.,  1.,  0.,  0.,  0.,  0., 13., 15., 10.,\n",
+              "       15.,  5.,  0.,  0.,  3., 15.,  2.,  0., 11.,  8.,  0.,  0.,  4.,\n",
+              "       12.,  0.,  0.,  8.,  8.,  0.,  0.,  5.,  8.,  0.,  0.,  9.,  8.,\n",
+              "        0.,  0.,  4., 11.,  0.,  1., 12.,  7.,  0.,  0.,  2., 14.,  5.,\n",
+              "       10., 12.,  0.,  0.,  0.,  0.,  6., 13., 10.,  0.,  0.,  0.])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 33
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Target Names 출력해 보기\n",
+        "digits.target_names"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "U11xGGyKd8Rw",
+        "outputId": "f003927a-296c-4a37-9dff-33e08a557c40"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 14
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 데이터 Describe 해 보기\n",
+        "print(digits.DESCR)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "e8TrLgg8hYF1",
+        "outputId": "360655dd-d77d-473b-936f-e54614d2b91d",
+        "collapsed": true
+      },
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            ".. _digits_dataset:\n",
+            "\n",
+            "Optical recognition of handwritten digits dataset\n",
+            "--------------------------------------------------\n",
+            "\n",
+            "**Data Set Characteristics:**\n",
+            "\n",
+            ":Number of Instances: 1797\n",
+            ":Number of Attributes: 64\n",
+            ":Attribute Information: 8x8 image of integer pixels in the range 0..16.\n",
+            ":Missing Attribute Values: None\n",
+            ":Creator: E. Alpaydin (alpaydin '@' boun.edu.tr)\n",
+            ":Date: July; 1998\n",
+            "\n",
+            "This is a copy of the test set of the UCI ML hand-written digits datasets\n",
+            "https://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits\n",
+            "\n",
+            "The data set contains images of hand-written digits: 10 classes where\n",
+            "each class refers to a digit.\n",
+            "\n",
+            "Preprocessing programs made available by NIST were used to extract\n",
+            "normalized bitmaps of handwritten digits from a preprinted form. From a\n",
+            "total of 43 people, 30 contributed to the training set and different 13\n",
+            "to the test set. 32x32 bitmaps are divided into nonoverlapping blocks of\n",
+            "4x4 and the number of on pixels are counted in each block. This generates\n",
+            "an input matrix of 8x8 where each element is an integer in the range\n",
+            "0..16. This reduces dimensionality and gives invariance to small\n",
+            "distortions.\n",
+            "\n",
+            "For info on NIST preprocessing routines, see M. D. Garris, J. L. Blue, G.\n",
+            "T. Candela, D. L. Dimmick, J. Geist, P. J. Grother, S. A. Janet, and C.\n",
+            "L. Wilson, NIST Form-Based Handprint Recognition System, NISTIR 5469,\n",
+            "1994.\n",
+            "\n",
+            ".. dropdown:: References\n",
+            "\n",
+            "  - C. Kaynak (1995) Methods of Combining Multiple Classifiers and Their\n",
+            "    Applications to Handwritten Digit Recognition, MSc Thesis, Institute of\n",
+            "    Graduate Studies in Science and Engineering, Bogazici University.\n",
+            "  - E. Alpaydin, C. Kaynak (1998) Cascading Classifiers, Kybernetika.\n",
+            "  - Ken Tang and Ponnuthurai N. Suganthan and Xi Yao and A. Kai Qin.\n",
+            "    Linear dimensionalityreduction using relevance weighted LDA. School of\n",
+            "    Electrical and Electronic Engineering Nanyang Technological University.\n",
+            "    2005.\n",
+            "  - Claudio Gentile. A New Approximate Maximal Margin Classification\n",
+            "    Algorithm. NIPS. 2000.\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#  train, test 데이터 분리\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(digits_data,\n",
+        "                                                    digits_label,\n",
+        "                                                    test_size=0.2,\n",
+        "                                                    random_state=10)\n",
+        "\n",
+        "print('X_train 개수: ', len(X_train),', X_test 개수: ', len(X_test))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "gSSmeeO6hoF8",
+        "outputId": "658d7c00-4df0-478e-dfd1-b6efd3632417"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "X_train 개수:  1437 , X_test 개수:  360\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "X_train.shape, y_train.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "p4NU7q_aiErP",
+        "outputId": "6dc08766-6711-4aa1-aa98-cc656274501c"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "((1437, 64), (1437,))"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 17
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "X_test.shape, y_test.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "PSMeJO-QiolF",
+        "outputId": "d71e7a74-aa20-4ac0-8ec9-efd63f36371f"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "((360, 64), (360,))"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 18
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_train, y_test"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bKBUM32HitXL",
+        "outputId": "9fe4971e-ea8a-42f9-9d34-2325aa21d9c0"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(array([2, 1, 9, ..., 1, 8, 2]),\n",
+              " array([5, 2, 5, 4, 8, 2, 4, 3, 3, 0, 8, 7, 0, 1, 8, 6, 9, 7, 9, 7, 1, 8,\n",
+              "        6, 7, 8, 8, 5, 3, 5, 9, 3, 3, 7, 3, 4, 1, 9, 2, 5, 4, 2, 1, 0, 9,\n",
+              "        2, 3, 6, 1, 9, 4, 4, 9, 8, 4, 8, 5, 9, 7, 8, 0, 4, 5, 8, 4, 7, 9,\n",
+              "        0, 7, 1, 3, 9, 3, 3, 8, 0, 7, 3, 6, 5, 2, 0, 8, 8, 0, 1, 1, 2, 8,\n",
+              "        8, 8, 2, 6, 3, 4, 7, 9, 8, 2, 9, 2, 5, 0, 8, 0, 4, 8, 8, 0, 6, 7,\n",
+              "        3, 3, 9, 1, 5, 4, 6, 0, 8, 8, 1, 1, 7, 9, 9, 5, 2, 3, 3, 9, 7, 6,\n",
+              "        2, 5, 4, 3, 3, 7, 6, 7, 2, 7, 4, 9, 5, 1, 9, 4, 6, 1, 1, 1, 4, 0,\n",
+              "        4, 9, 1, 2, 3, 5, 0, 3, 4, 1, 5, 4, 9, 3, 5, 6, 4, 0, 8, 6, 7, 0,\n",
+              "        9, 9, 4, 7, 3, 5, 2, 0, 6, 7, 5, 3, 9, 7, 1, 3, 2, 8, 3, 3, 1, 7,\n",
+              "        1, 1, 1, 7, 1, 6, 7, 6, 9, 5, 2, 3, 5, 2, 9, 5, 4, 8, 2, 9, 1, 5,\n",
+              "        0, 2, 3, 9, 0, 2, 0, 2, 1, 0, 5, 0, 6, 4, 2, 1, 9, 0, 9, 0, 6, 9,\n",
+              "        4, 4, 9, 7, 5, 6, 1, 8, 7, 0, 8, 6, 2, 0, 1, 2, 3, 8, 4, 4, 3, 5,\n",
+              "        7, 9, 7, 2, 0, 2, 0, 9, 2, 8, 6, 3, 6, 0, 6, 6, 6, 7, 1, 6, 1, 7,\n",
+              "        6, 0, 6, 3, 7, 4, 6, 2, 8, 0, 8, 4, 7, 3, 3, 0, 0, 2, 3, 9, 7, 4,\n",
+              "        6, 7, 9, 7, 6, 0, 5, 6, 2, 7, 1, 0, 5, 1, 6, 4, 7, 2, 5, 1, 4, 6,\n",
+              "        6, 5, 0, 2, 9, 8, 7, 9, 6, 7, 0, 8, 3, 5, 9, 4, 1, 5, 5, 4, 7, 3,\n",
+              "        9, 2, 7, 3, 3, 6, 6, 3]))"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 19
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.tree import DecisionTreeClassifier\n",
+        "decision_tree = DecisionTreeClassifier(random_state=32)\n",
+        "print(decision_tree._estimator_type)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "OtPJ29RljERB",
+        "outputId": "77eacd3f-56b1-45f6-e4a1-b2b1b0ec8810"
+      },
+      "execution_count": 20,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "classifier\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "decision_tree.fit(X_train, y_train)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 80
+        },
+        "id": "XD4g76sOjLLn",
+        "outputId": "ea9279d5-bb5b-4c65-84fd-16346814e8c8"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "DecisionTreeClassifier(random_state=32)"
+            ],
+            "text/html": [
+              "<style>#sk-container-id-1 {\n",
+              "  /* Definition of color scheme common for light and dark mode */\n",
+              "  --sklearn-color-text: black;\n",
+              "  --sklearn-color-line: gray;\n",
+              "  /* Definition of color scheme for unfitted estimators */\n",
+              "  --sklearn-color-unfitted-level-0: #fff5e6;\n",
+              "  --sklearn-color-unfitted-level-1: #f6e4d2;\n",
+              "  --sklearn-color-unfitted-level-2: #ffe0b3;\n",
+              "  --sklearn-color-unfitted-level-3: chocolate;\n",
+              "  /* Definition of color scheme for fitted estimators */\n",
+              "  --sklearn-color-fitted-level-0: #f0f8ff;\n",
+              "  --sklearn-color-fitted-level-1: #d4ebff;\n",
+              "  --sklearn-color-fitted-level-2: #b3dbfd;\n",
+              "  --sklearn-color-fitted-level-3: cornflowerblue;\n",
+              "\n",
+              "  /* Specific color for light theme */\n",
+              "  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));\n",
+              "  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));\n",
+              "  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));\n",
+              "  --sklearn-color-icon: #696969;\n",
+              "\n",
+              "  @media (prefers-color-scheme: dark) {\n",
+              "    /* Redefinition of color scheme for dark theme */\n",
+              "    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));\n",
+              "    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));\n",
+              "    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));\n",
+              "    --sklearn-color-icon: #878787;\n",
+              "  }\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 {\n",
+              "  color: var(--sklearn-color-text);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 pre {\n",
+              "  padding: 0;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 input.sk-hidden--visually {\n",
+              "  border: 0;\n",
+              "  clip: rect(1px 1px 1px 1px);\n",
+              "  clip: rect(1px, 1px, 1px, 1px);\n",
+              "  height: 1px;\n",
+              "  margin: -1px;\n",
+              "  overflow: hidden;\n",
+              "  padding: 0;\n",
+              "  position: absolute;\n",
+              "  width: 1px;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-dashed-wrapped {\n",
+              "  border: 1px dashed var(--sklearn-color-line);\n",
+              "  margin: 0 0.4em 0.5em 0.4em;\n",
+              "  box-sizing: border-box;\n",
+              "  padding-bottom: 0.4em;\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-container {\n",
+              "  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`\n",
+              "     but bootstrap.min.css set `[hidden] { display: none !important; }`\n",
+              "     so we also need the `!important` here to be able to override the\n",
+              "     default hidden behavior on the sphinx rendered scikit-learn.org.\n",
+              "     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */\n",
+              "  display: inline-block !important;\n",
+              "  position: relative;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-text-repr-fallback {\n",
+              "  display: none;\n",
+              "}\n",
+              "\n",
+              "div.sk-parallel-item,\n",
+              "div.sk-serial,\n",
+              "div.sk-item {\n",
+              "  /* draw centered vertical line to link estimators */\n",
+              "  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));\n",
+              "  background-size: 2px 100%;\n",
+              "  background-repeat: no-repeat;\n",
+              "  background-position: center center;\n",
+              "}\n",
+              "\n",
+              "/* Parallel-specific style estimator block */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel-item::after {\n",
+              "  content: \"\";\n",
+              "  width: 100%;\n",
+              "  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);\n",
+              "  flex-grow: 1;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel {\n",
+              "  display: flex;\n",
+              "  align-items: stretch;\n",
+              "  justify-content: center;\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "  position: relative;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel-item {\n",
+              "  display: flex;\n",
+              "  flex-direction: column;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel-item:first-child::after {\n",
+              "  align-self: flex-end;\n",
+              "  width: 50%;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel-item:last-child::after {\n",
+              "  align-self: flex-start;\n",
+              "  width: 50%;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-parallel-item:only-child::after {\n",
+              "  width: 0;\n",
+              "}\n",
+              "\n",
+              "/* Serial-specific style estimator block */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-serial {\n",
+              "  display: flex;\n",
+              "  flex-direction: column;\n",
+              "  align-items: center;\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "  padding-right: 1em;\n",
+              "  padding-left: 1em;\n",
+              "}\n",
+              "\n",
+              "\n",
+              "/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is\n",
+              "clickable and can be expanded/collapsed.\n",
+              "- Pipeline and ColumnTransformer use this feature and define the default style\n",
+              "- Estimators will overwrite some part of the style using the `sk-estimator` class\n",
+              "*/\n",
+              "\n",
+              "/* Pipeline and ColumnTransformer style (default) */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-toggleable {\n",
+              "  /* Default theme specific background. It is overwritten whether we have a\n",
+              "  specific estimator or a Pipeline/ColumnTransformer */\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "}\n",
+              "\n",
+              "/* Toggleable label */\n",
+              "#sk-container-id-1 label.sk-toggleable__label {\n",
+              "  cursor: pointer;\n",
+              "  display: block;\n",
+              "  width: 100%;\n",
+              "  margin-bottom: 0;\n",
+              "  padding: 0.5em;\n",
+              "  box-sizing: border-box;\n",
+              "  text-align: center;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 label.sk-toggleable__label-arrow:before {\n",
+              "  /* Arrow on the left of the label */\n",
+              "  content: \"▸\";\n",
+              "  float: left;\n",
+              "  margin-right: 0.25em;\n",
+              "  color: var(--sklearn-color-icon);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {\n",
+              "  color: var(--sklearn-color-text);\n",
+              "}\n",
+              "\n",
+              "/* Toggleable content - dropdown */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-toggleable__content {\n",
+              "  max-height: 0;\n",
+              "  max-width: 0;\n",
+              "  overflow: hidden;\n",
+              "  text-align: left;\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-0);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-toggleable__content.fitted {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-0);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-toggleable__content pre {\n",
+              "  margin: 0.2em;\n",
+              "  border-radius: 0.25em;\n",
+              "  color: var(--sklearn-color-text);\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-0);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-toggleable__content.fitted pre {\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-0);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {\n",
+              "  /* Expand drop-down */\n",
+              "  max-height: 200px;\n",
+              "  max-width: 100%;\n",
+              "  overflow: auto;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {\n",
+              "  content: \"▾\";\n",
+              "}\n",
+              "\n",
+              "/* Pipeline/ColumnTransformer-specific style */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {\n",
+              "  color: var(--sklearn-color-text);\n",
+              "  background-color: var(--sklearn-color-unfitted-level-2);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {\n",
+              "  background-color: var(--sklearn-color-fitted-level-2);\n",
+              "}\n",
+              "\n",
+              "/* Estimator-specific style */\n",
+              "\n",
+              "/* Colorize estimator box */\n",
+              "#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-2);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-2);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-label label.sk-toggleable__label,\n",
+              "#sk-container-id-1 div.sk-label label {\n",
+              "  /* The background is the default theme color */\n",
+              "  color: var(--sklearn-color-text-on-default-background);\n",
+              "}\n",
+              "\n",
+              "/* On hover, darken the color of the background */\n",
+              "#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {\n",
+              "  color: var(--sklearn-color-text);\n",
+              "  background-color: var(--sklearn-color-unfitted-level-2);\n",
+              "}\n",
+              "\n",
+              "/* Label box, darken color on hover, fitted */\n",
+              "#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {\n",
+              "  color: var(--sklearn-color-text);\n",
+              "  background-color: var(--sklearn-color-fitted-level-2);\n",
+              "}\n",
+              "\n",
+              "/* Estimator label */\n",
+              "\n",
+              "#sk-container-id-1 div.sk-label label {\n",
+              "  font-family: monospace;\n",
+              "  font-weight: bold;\n",
+              "  display: inline-block;\n",
+              "  line-height: 1.2em;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-label-container {\n",
+              "  text-align: center;\n",
+              "}\n",
+              "\n",
+              "/* Estimator-specific */\n",
+              "#sk-container-id-1 div.sk-estimator {\n",
+              "  font-family: monospace;\n",
+              "  border: 1px dotted var(--sklearn-color-border-box);\n",
+              "  border-radius: 0.25em;\n",
+              "  box-sizing: border-box;\n",
+              "  margin-bottom: 0.5em;\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-0);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-estimator.fitted {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-0);\n",
+              "}\n",
+              "\n",
+              "/* on hover */\n",
+              "#sk-container-id-1 div.sk-estimator:hover {\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-2);\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 div.sk-estimator.fitted:hover {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-2);\n",
+              "}\n",
+              "\n",
+              "/* Specification for estimator info (e.g. \"i\" and \"?\") */\n",
+              "\n",
+              "/* Common style for \"i\" and \"?\" */\n",
+              "\n",
+              ".sk-estimator-doc-link,\n",
+              "a:link.sk-estimator-doc-link,\n",
+              "a:visited.sk-estimator-doc-link {\n",
+              "  float: right;\n",
+              "  font-size: smaller;\n",
+              "  line-height: 1em;\n",
+              "  font-family: monospace;\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "  border-radius: 1em;\n",
+              "  height: 1em;\n",
+              "  width: 1em;\n",
+              "  text-decoration: none !important;\n",
+              "  margin-left: 1ex;\n",
+              "  /* unfitted */\n",
+              "  border: var(--sklearn-color-unfitted-level-1) 1pt solid;\n",
+              "  color: var(--sklearn-color-unfitted-level-1);\n",
+              "}\n",
+              "\n",
+              ".sk-estimator-doc-link.fitted,\n",
+              "a:link.sk-estimator-doc-link.fitted,\n",
+              "a:visited.sk-estimator-doc-link.fitted {\n",
+              "  /* fitted */\n",
+              "  border: var(--sklearn-color-fitted-level-1) 1pt solid;\n",
+              "  color: var(--sklearn-color-fitted-level-1);\n",
+              "}\n",
+              "\n",
+              "/* On hover */\n",
+              "div.sk-estimator:hover .sk-estimator-doc-link:hover,\n",
+              ".sk-estimator-doc-link:hover,\n",
+              "div.sk-label-container:hover .sk-estimator-doc-link:hover,\n",
+              ".sk-estimator-doc-link:hover {\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-3);\n",
+              "  color: var(--sklearn-color-background);\n",
+              "  text-decoration: none;\n",
+              "}\n",
+              "\n",
+              "div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,\n",
+              ".sk-estimator-doc-link.fitted:hover,\n",
+              "div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,\n",
+              ".sk-estimator-doc-link.fitted:hover {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-3);\n",
+              "  color: var(--sklearn-color-background);\n",
+              "  text-decoration: none;\n",
+              "}\n",
+              "\n",
+              "/* Span, style for the box shown on hovering the info icon */\n",
+              ".sk-estimator-doc-link span {\n",
+              "  display: none;\n",
+              "  z-index: 9999;\n",
+              "  position: relative;\n",
+              "  font-weight: normal;\n",
+              "  right: .2ex;\n",
+              "  padding: .5ex;\n",
+              "  margin: .5ex;\n",
+              "  width: min-content;\n",
+              "  min-width: 20ex;\n",
+              "  max-width: 50ex;\n",
+              "  color: var(--sklearn-color-text);\n",
+              "  box-shadow: 2pt 2pt 4pt #999;\n",
+              "  /* unfitted */\n",
+              "  background: var(--sklearn-color-unfitted-level-0);\n",
+              "  border: .5pt solid var(--sklearn-color-unfitted-level-3);\n",
+              "}\n",
+              "\n",
+              ".sk-estimator-doc-link.fitted span {\n",
+              "  /* fitted */\n",
+              "  background: var(--sklearn-color-fitted-level-0);\n",
+              "  border: var(--sklearn-color-fitted-level-3);\n",
+              "}\n",
+              "\n",
+              ".sk-estimator-doc-link:hover span {\n",
+              "  display: block;\n",
+              "}\n",
+              "\n",
+              "/* \"?\"-specific style due to the `<a>` HTML tag */\n",
+              "\n",
+              "#sk-container-id-1 a.estimator_doc_link {\n",
+              "  float: right;\n",
+              "  font-size: 1rem;\n",
+              "  line-height: 1em;\n",
+              "  font-family: monospace;\n",
+              "  background-color: var(--sklearn-color-background);\n",
+              "  border-radius: 1rem;\n",
+              "  height: 1rem;\n",
+              "  width: 1rem;\n",
+              "  text-decoration: none;\n",
+              "  /* unfitted */\n",
+              "  color: var(--sklearn-color-unfitted-level-1);\n",
+              "  border: var(--sklearn-color-unfitted-level-1) 1pt solid;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 a.estimator_doc_link.fitted {\n",
+              "  /* fitted */\n",
+              "  border: var(--sklearn-color-fitted-level-1) 1pt solid;\n",
+              "  color: var(--sklearn-color-fitted-level-1);\n",
+              "}\n",
+              "\n",
+              "/* On hover */\n",
+              "#sk-container-id-1 a.estimator_doc_link:hover {\n",
+              "  /* unfitted */\n",
+              "  background-color: var(--sklearn-color-unfitted-level-3);\n",
+              "  color: var(--sklearn-color-background);\n",
+              "  text-decoration: none;\n",
+              "}\n",
+              "\n",
+              "#sk-container-id-1 a.estimator_doc_link.fitted:hover {\n",
+              "  /* fitted */\n",
+              "  background-color: var(--sklearn-color-fitted-level-3);\n",
+              "}\n",
+              "</style><div id=\"sk-container-id-1\" class=\"sk-top-container\"><div class=\"sk-text-repr-fallback\"><pre>DecisionTreeClassifier(random_state=32)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class=\"sk-container\" hidden><div class=\"sk-item\"><div class=\"sk-estimator fitted sk-toggleable\"><input class=\"sk-toggleable__control sk-hidden--visually\" id=\"sk-estimator-id-1\" type=\"checkbox\" checked><label for=\"sk-estimator-id-1\" class=\"sk-toggleable__label fitted sk-toggleable__label-arrow fitted\">&nbsp;&nbsp;DecisionTreeClassifier<a class=\"sk-estimator-doc-link fitted\" rel=\"noreferrer\" target=\"_blank\" href=\"https://scikit-learn.org/1.5/modules/generated/sklearn.tree.DecisionTreeClassifier.html\">?<span>Documentation for DecisionTreeClassifier</span></a><span class=\"sk-estimator-doc-link fitted\">i<span>Fitted</span></span></label><div class=\"sk-toggleable__content fitted\"><pre>DecisionTreeClassifier(random_state=32)</pre></div> </div></div></div></div>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 21
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# # 테스트데이터 X_test로 예측하기\n",
+        "y_pred = decision_tree.predict(X_test)\n",
+        "y_pred"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ymk6mNTQjetq",
+        "outputId": "8c05aa12-186d-4d4b-c003-6e8e3c13735c"
+      },
+      "execution_count": 22,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([5, 2, 5, 4, 1, 2, 4, 3, 3, 0, 8, 7, 0, 1, 8, 6, 9, 7, 9, 7, 1, 3,\n",
+              "       6, 7, 8, 8, 5, 3, 5, 9, 3, 3, 7, 3, 4, 1, 9, 2, 5, 4, 2, 1, 0, 9,\n",
+              "       2, 3, 6, 1, 9, 8, 4, 3, 8, 4, 9, 5, 9, 7, 8, 0, 4, 3, 1, 4, 7, 9,\n",
+              "       0, 7, 1, 3, 9, 3, 3, 8, 0, 7, 3, 6, 5, 2, 0, 8, 8, 0, 1, 1, 2, 8,\n",
+              "       8, 8, 3, 6, 3, 4, 7, 9, 8, 2, 9, 2, 5, 9, 8, 0, 6, 8, 3, 0, 6, 7,\n",
+              "       7, 3, 9, 1, 5, 4, 6, 0, 8, 8, 1, 2, 7, 2, 9, 5, 2, 3, 4, 4, 7, 6,\n",
+              "       2, 5, 4, 9, 3, 7, 6, 7, 2, 7, 4, 5, 3, 1, 9, 7, 4, 1, 8, 1, 4, 0,\n",
+              "       5, 9, 1, 2, 3, 5, 0, 3, 4, 1, 5, 4, 9, 3, 5, 6, 4, 0, 9, 6, 7, 0,\n",
+              "       9, 9, 4, 7, 3, 5, 2, 0, 6, 7, 5, 3, 9, 7, 1, 3, 1, 4, 3, 3, 1, 4,\n",
+              "       1, 1, 1, 7, 1, 6, 4, 6, 9, 5, 1, 3, 5, 2, 9, 8, 8, 8, 2, 9, 1, 5,\n",
+              "       2, 2, 3, 9, 0, 2, 0, 2, 1, 0, 5, 0, 6, 4, 2, 1, 9, 0, 9, 0, 6, 9,\n",
+              "       4, 4, 9, 6, 5, 6, 1, 1, 7, 0, 8, 6, 2, 0, 1, 2, 3, 8, 4, 4, 3, 5,\n",
+              "       7, 3, 7, 2, 0, 2, 0, 9, 2, 8, 6, 3, 3, 0, 6, 6, 6, 7, 1, 6, 1, 7,\n",
+              "       6, 0, 6, 3, 7, 5, 6, 2, 2, 9, 8, 4, 7, 3, 3, 0, 0, 3, 3, 9, 7, 4,\n",
+              "       4, 7, 9, 7, 4, 0, 5, 6, 1, 8, 1, 0, 5, 2, 6, 4, 7, 8, 5, 8, 6, 6,\n",
+              "       6, 5, 0, 2, 9, 8, 7, 9, 6, 7, 0, 8, 9, 5, 9, 6, 1, 5, 5, 4, 7, 3,\n",
+              "       9, 2, 7, 3, 3, 6, 6, 3])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 22
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# # 진짜 정답\n",
+        "y_test"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5NRtv0X5jhCl",
+        "outputId": "5f8a2bdc-826d-42d5-d7fa-f1af3f8105af"
+      },
+      "execution_count": 23,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([5, 2, 5, 4, 8, 2, 4, 3, 3, 0, 8, 7, 0, 1, 8, 6, 9, 7, 9, 7, 1, 8,\n",
+              "       6, 7, 8, 8, 5, 3, 5, 9, 3, 3, 7, 3, 4, 1, 9, 2, 5, 4, 2, 1, 0, 9,\n",
+              "       2, 3, 6, 1, 9, 4, 4, 9, 8, 4, 8, 5, 9, 7, 8, 0, 4, 5, 8, 4, 7, 9,\n",
+              "       0, 7, 1, 3, 9, 3, 3, 8, 0, 7, 3, 6, 5, 2, 0, 8, 8, 0, 1, 1, 2, 8,\n",
+              "       8, 8, 2, 6, 3, 4, 7, 9, 8, 2, 9, 2, 5, 0, 8, 0, 4, 8, 8, 0, 6, 7,\n",
+              "       3, 3, 9, 1, 5, 4, 6, 0, 8, 8, 1, 1, 7, 9, 9, 5, 2, 3, 3, 9, 7, 6,\n",
+              "       2, 5, 4, 3, 3, 7, 6, 7, 2, 7, 4, 9, 5, 1, 9, 4, 6, 1, 1, 1, 4, 0,\n",
+              "       4, 9, 1, 2, 3, 5, 0, 3, 4, 1, 5, 4, 9, 3, 5, 6, 4, 0, 8, 6, 7, 0,\n",
+              "       9, 9, 4, 7, 3, 5, 2, 0, 6, 7, 5, 3, 9, 7, 1, 3, 2, 8, 3, 3, 1, 7,\n",
+              "       1, 1, 1, 7, 1, 6, 7, 6, 9, 5, 2, 3, 5, 2, 9, 5, 4, 8, 2, 9, 1, 5,\n",
+              "       0, 2, 3, 9, 0, 2, 0, 2, 1, 0, 5, 0, 6, 4, 2, 1, 9, 0, 9, 0, 6, 9,\n",
+              "       4, 4, 9, 7, 5, 6, 1, 8, 7, 0, 8, 6, 2, 0, 1, 2, 3, 8, 4, 4, 3, 5,\n",
+              "       7, 9, 7, 2, 0, 2, 0, 9, 2, 8, 6, 3, 6, 0, 6, 6, 6, 7, 1, 6, 1, 7,\n",
+              "       6, 0, 6, 3, 7, 4, 6, 2, 8, 0, 8, 4, 7, 3, 3, 0, 0, 2, 3, 9, 7, 4,\n",
+              "       6, 7, 9, 7, 6, 0, 5, 6, 2, 7, 1, 0, 5, 1, 6, 4, 7, 2, 5, 1, 4, 6,\n",
+              "       6, 5, 0, 2, 9, 8, 7, 9, 6, 7, 0, 8, 3, 5, 9, 4, 1, 5, 5, 4, 7, 3,\n",
+              "       9, 2, 7, 3, 3, 6, 6, 3])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 23
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# # 실제 정답 y_test과 예측값 y_pred 비교하여 정확도 측정하기\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "accuracy = accuracy_score(y_test, y_pred)\n",
+        "accuracy"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3BC3gTSIjoBD",
+        "outputId": "4e5ea48b-3d26-47fb-e484-4fad3fa19387"
+      },
+      "execution_count": 24,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0.8611111111111112"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 24
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 다양한 모델로 학습시켜보기\n",
+        "# Random Forest\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "random_forest = RandomForestClassifier(random_state=32) # RandomForest분류기 객체를 생성\n",
+        "random_forest.fit(X_train, y_train) # 훈련\n",
+        "y_pred = random_forest.predict(X_test) # 예측\n",
+        "\n",
+        "print(classification_report(y_test, y_pred))  # 결과 지표를 확인"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "grRLvjzqj9Bz",
+        "outputId": "ef1e1ecc-eff4-48ff-b42d-cf165365cd66"
+      },
+      "execution_count": 25,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       1.00      0.97      0.99        37\n",
+            "           1       0.97      0.94      0.96        34\n",
+            "           2       0.92      1.00      0.96        34\n",
+            "           3       0.95      0.97      0.96        40\n",
+            "           4       0.94      0.94      0.94        34\n",
+            "           5       0.94      0.97      0.95        32\n",
+            "           6       1.00      1.00      1.00        37\n",
+            "           7       0.93      0.97      0.95        40\n",
+            "           8       0.97      0.88      0.92        33\n",
+            "           9       0.97      0.92      0.95        39\n",
+            "\n",
+            "    accuracy                           0.96       360\n",
+            "   macro avg       0.96      0.96      0.96       360\n",
+            "weighted avg       0.96      0.96      0.96       360\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# SVM 사용해 보기\n",
+        "from sklearn import svm #Support Vector Machine을 사용하기 위해 import\n",
+        "svm_model = svm.SVC() # 모델 객체를 만든다.\n",
+        "\n",
+        "svm_model.fit(X_train, y_train) # 훈련\n",
+        "y_pred = svm_model.predict(X_test) # 예측\n",
+        "\n",
+        "print(classification_report(y_test, y_pred)) # 결과 지표를 확인"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JBImlKd0mx5q",
+        "outputId": "836299f6-a495-4f35-c035-14ca94b62155"
+      },
+      "execution_count": 26,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       1.00      1.00      1.00        37\n",
+            "           1       0.97      1.00      0.99        34\n",
+            "           2       0.97      1.00      0.99        34\n",
+            "           3       1.00      0.97      0.99        40\n",
+            "           4       1.00      0.94      0.97        34\n",
+            "           5       0.97      1.00      0.98        32\n",
+            "           6       1.00      1.00      1.00        37\n",
+            "           7       1.00      1.00      1.00        40\n",
+            "           8       0.91      0.97      0.94        33\n",
+            "           9       1.00      0.95      0.97        39\n",
+            "\n",
+            "    accuracy                           0.98       360\n",
+            "   macro avg       0.98      0.98      0.98       360\n",
+            "weighted avg       0.98      0.98      0.98       360\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# SGD Classifier\n",
+        "\n",
+        "from sklearn.linear_model import SGDClassifier #선형분류기인 SGDClassifier를 사용하기 위한 import\n",
+        "sgd_model = SGDClassifier() # 모델 객체 생성\n",
+        "\n",
+        "sgd_model.fit(X_train, y_train) # 훈련\n",
+        "y_pred = sgd_model.predict(X_test) # 예측\n",
+        "\n",
+        "print(classification_report(y_test, y_pred)) # 결과 지표를 확인"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "eRYWzxD3mdAE",
+        "outputId": "bfa8ae01-00dd-46b3-bb4d-e185acbf79cf"
+      },
+      "execution_count": 36,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       1.00      1.00      1.00        37\n",
+            "           1       0.89      0.91      0.90        34\n",
+            "           2       0.97      1.00      0.99        34\n",
+            "           3       1.00      0.95      0.97        40\n",
+            "           4       0.97      0.91      0.94        34\n",
+            "           5       0.97      0.94      0.95        32\n",
+            "           6       0.90      1.00      0.95        37\n",
+            "           7       1.00      1.00      1.00        40\n",
+            "           8       0.97      0.85      0.90        33\n",
+            "           9       0.90      0.97      0.94        39\n",
+            "\n",
+            "    accuracy                           0.96       360\n",
+            "   macro avg       0.96      0.95      0.95       360\n",
+            "weighted avg       0.96      0.96      0.96       360\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Logistic Regression\n",
+        "\n",
+        "from sklearn.linear_model import LogisticRegression # 선형분류기인 LogisticRegression를 사용하기 위한 import\n",
+        "logistic_model = LogisticRegression() # 모델 객체 생성\n",
+        "\n",
+        "logistic_model.fit(X_train, y_train) #LogisticRegression모델로 훈련데이터를 가지고 훈련시킨다.\n",
+        "y_pred = logistic_model.predict(X_test) # 예측\n",
+        "\n",
+        "print(classification_report(y_test, y_pred)) # 결과 지표를 확인"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1QcQ01hznABn",
+        "outputId": "108d613b-a5b7-4451-e533-9538aa8d20e4"
+      },
+      "execution_count": 37,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       0.97      1.00      0.99        37\n",
+            "           1       0.91      0.91      0.91        34\n",
+            "           2       0.92      1.00      0.96        34\n",
+            "           3       1.00      0.95      0.97        40\n",
+            "           4       0.94      0.91      0.93        34\n",
+            "           5       0.94      0.94      0.94        32\n",
+            "           6       0.97      0.97      0.97        37\n",
+            "           7       0.97      0.95      0.96        40\n",
+            "           8       0.89      0.94      0.91        33\n",
+            "           9       0.97      0.92      0.95        39\n",
+            "\n",
+            "    accuracy                           0.95       360\n",
+            "   macro avg       0.95      0.95      0.95       360\n",
+            "weighted avg       0.95      0.95      0.95       360\n",
+            "\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "/usr/local/lib/python3.10/dist-packages/sklearn/linear_model/_logistic.py:469: ConvergenceWarning: lbfgs failed to converge (status=1):\n",
+            "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.\n",
+            "\n",
+            "Increase the number of iterations (max_iter) or scale the data as shown in:\n",
+            "    https://scikit-learn.org/stable/modules/preprocessing.html\n",
+            "Please also refer to the documentation for alternative solver options:\n",
+            "    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression\n",
+            "  n_iter_i = _check_optimize_result(\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Logistic Regression\n",
+        "\n",
+        "from sklearn.linear_model import LogisticRegression # 선형분류기인 LogisticRegression를 사용하기 위한 import\n",
+        "logistic_model = LogisticRegression(max_iter=200) # 모델 객체 생성,  max_iter를 200으로 설정\n",
+        "\n",
+        "logistic_model.fit(X_train, y_train) #LogisticRegression모델로 훈련데이터를 가지고 훈련시킨다.\n",
+        "y_pred = logistic_model.predict(X_test) # 예측\n",
+        "\n",
+        "print(classification_report(y_test, y_pred)) # 결과 지표를 확인"
+      ],
+      "metadata": {
+        "id": "h7R8phdVnq3W",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "7b8d9e86-14be-4939-94c4-4469c7d40bb2"
+      },
+      "execution_count": 38,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       1.00      1.00      1.00        37\n",
+            "           1       0.91      0.91      0.91        34\n",
+            "           2       0.92      1.00      0.96        34\n",
+            "           3       1.00      0.95      0.97        40\n",
+            "           4       0.94      0.94      0.94        34\n",
+            "           5       0.94      0.94      0.94        32\n",
+            "           6       0.97      0.97      0.97        37\n",
+            "           7       0.97      0.97      0.97        40\n",
+            "           8       0.89      0.94      0.91        33\n",
+            "           9       1.00      0.92      0.96        39\n",
+            "\n",
+            "    accuracy                           0.96       360\n",
+            "   macro avg       0.95      0.96      0.95       360\n",
+            "weighted avg       0.96      0.96      0.96       360\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 정확도(Accuracy)\n",
+        "\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "print(accuracy_score(y_test, y_pred))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fZuWM_vJpeLn",
+        "outputId": "2666ebec-66c1-4186-b4d4-d1d56dfd2f21"
+      },
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "0.9555555555555556\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# F1 Score\n",
+        "from sklearn.metrics import f1_score\n",
+        "print(f1_score(y_test,y_pred, average = 'weighted')) # 각 클래스의 샘플 수가 달라 옵션추가"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "VZ-a4Wttt-9u",
+        "outputId": "56af1420-f410-4ee2-e56d-2a80d96ea6dc"
+      },
+      "execution_count": 40,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "0.9557388181949076\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# f1 Score이 가장 나은 모델일 가능성이 큼.\n",
+        "# 정밀도와 재현율의 조화 평균으로, 특히 데이터가 불균형할 때 더 유용\n",
+        "# 모델이 올바르게 예측한 샘플의 비율을 의미"
+      ],
+      "metadata": {
+        "id": "Ra88lqkQzcJg"
+      },
+      "execution_count": 41,
+      "outputs": []
+    }
+  ]
+}
