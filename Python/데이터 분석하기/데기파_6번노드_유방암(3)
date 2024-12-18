@@ -1,0 +1,451 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMZhs0uKJQufPgC2DTOPsmQ",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Whatthe-we/AIFFEL_quest_cr/blob/master/Python/%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0/%EB%8D%B0%EA%B8%B0%ED%8C%8C_6%EB%B2%88%EB%85%B8%EB%93%9C_%EC%9C%A0%EB%B0%A9%EC%95%94(3)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "프로젝트 (3) load_breast_cancer : 유방암 여부를 진단"
+      ],
+      "metadata": {
+        "id": "g7cMjaTL4_oG"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 95,
+      "metadata": {
+        "id": "CBooJFjucQ65"
+      },
+      "outputs": [],
+      "source": [
+        "# (1) 필요한 모듈 import하기\n",
+        "from sklearn.datasets import load_breast_cancer\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.metrics import accuracy_score, classification_report\n",
+        "from sklearn.tree import DecisionTreeClassifier\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.svm import SVC\n",
+        "from sklearn.linear_model import SGDClassifier, LogisticRegression\n",
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# (2) 데이터 준비\n",
+        "data = load_breast_cancer()"
+      ],
+      "metadata": {
+        "id": "wsETa83GcVcn"
+      },
+      "execution_count": 33,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# (3) 데이터 이해하기\n",
+        "# data 지정\n",
+        "X = data.data # Feature\n",
+        "y = data.target # Label"
+      ],
+      "metadata": {
+        "id": "wWlip-3ndkw4"
+      },
+      "execution_count": 67,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# (4) train, test 데이터 분리\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7)"
+      ],
+      "metadata": {
+        "id": "IHinnTkudlJ-"
+      },
+      "execution_count": 71,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Target Names 출력\n",
+        "print(\"Target Names:\", data.target_names)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "roH5mYBQdlNh",
+        "outputId": "dc5084f4-22f6-42e8-c1fd-3557401ad8fc"
+      },
+      "execution_count": 70,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Target Names: ['malignant' 'benign']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 데이터 Describe\n",
+        "print(df.describe())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "id": "BxkjJqaThOfj",
+        "outputId": "40a0a13c-b37f-4c8e-bf57-b84a0f86d46a"
+      },
+      "execution_count": 68,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "       mean radius  mean texture  mean perimeter    mean area  \\\n",
+            "count   569.000000    569.000000      569.000000   569.000000   \n",
+            "mean     14.127292     19.289649       91.969033   654.889104   \n",
+            "std       3.524049      4.301036       24.298981   351.914129   \n",
+            "min       6.981000      9.710000       43.790000   143.500000   \n",
+            "25%      11.700000     16.170000       75.170000   420.300000   \n",
+            "50%      13.370000     18.840000       86.240000   551.100000   \n",
+            "75%      15.780000     21.800000      104.100000   782.700000   \n",
+            "max      28.110000     39.280000      188.500000  2501.000000   \n",
+            "\n",
+            "       mean smoothness  mean compactness  mean concavity  mean concave points  \\\n",
+            "count       569.000000        569.000000      569.000000           569.000000   \n",
+            "mean          0.096360          0.104341        0.088799             0.048919   \n",
+            "std           0.014064          0.052813        0.079720             0.038803   \n",
+            "min           0.052630          0.019380        0.000000             0.000000   \n",
+            "25%           0.086370          0.064920        0.029560             0.020310   \n",
+            "50%           0.095870          0.092630        0.061540             0.033500   \n",
+            "75%           0.105300          0.130400        0.130700             0.074000   \n",
+            "max           0.163400          0.345400        0.426800             0.201200   \n",
+            "\n",
+            "       mean symmetry  mean fractal dimension  ...  worst radius  \\\n",
+            "count     569.000000              569.000000  ...    569.000000   \n",
+            "mean        0.181162                0.062798  ...     16.269190   \n",
+            "std         0.027414                0.007060  ...      4.833242   \n",
+            "min         0.106000                0.049960  ...      7.930000   \n",
+            "25%         0.161900                0.057700  ...     13.010000   \n",
+            "50%         0.179200                0.061540  ...     14.970000   \n",
+            "75%         0.195700                0.066120  ...     18.790000   \n",
+            "max         0.304000                0.097440  ...     36.040000   \n",
+            "\n",
+            "       worst texture  worst perimeter   worst area  worst smoothness  \\\n",
+            "count     569.000000       569.000000   569.000000        569.000000   \n",
+            "mean       25.677223       107.261213   880.583128          0.132369   \n",
+            "std         6.146258        33.602542   569.356993          0.022832   \n",
+            "min        12.020000        50.410000   185.200000          0.071170   \n",
+            "25%        21.080000        84.110000   515.300000          0.116600   \n",
+            "50%        25.410000        97.660000   686.500000          0.131300   \n",
+            "75%        29.720000       125.400000  1084.000000          0.146000   \n",
+            "max        49.540000       251.200000  4254.000000          0.222600   \n",
+            "\n",
+            "       worst compactness  worst concavity  worst concave points  \\\n",
+            "count         569.000000       569.000000            569.000000   \n",
+            "mean            0.254265         0.272188              0.114606   \n",
+            "std             0.157336         0.208624              0.065732   \n",
+            "min             0.027290         0.000000              0.000000   \n",
+            "25%             0.147200         0.114500              0.064930   \n",
+            "50%             0.211900         0.226700              0.099930   \n",
+            "75%             0.339100         0.382900              0.161400   \n",
+            "max             1.058000         1.252000              0.291000   \n",
+            "\n",
+            "       worst symmetry  worst fractal dimension  \n",
+            "count      569.000000               569.000000  \n",
+            "mean         0.290076                 0.083946  \n",
+            "std          0.061867                 0.018061  \n",
+            "min          0.156500                 0.055040  \n",
+            "25%          0.250400                 0.071460  \n",
+            "50%          0.282200                 0.080040  \n",
+            "75%          0.317900                 0.092080  \n",
+            "max          0.663800                 0.207500  \n",
+            "\n",
+            "[8 rows x 30 columns]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Target 데이터 요약\n",
+        "print(pd.Series(data.target).value_counts())\n",
+        "print(data.target_names)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "DvUfxJvphOnT",
+        "outputId": "eb5cea2f-d799-42fc-99b4-16127be950b1"
+      },
+      "execution_count": 69,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "1    357\n",
+            "0    212\n",
+            "Name: count, dtype: int64\n",
+            "['malignant' 'benign']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "tIflcEcfk41m"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# (5) 다양한 모델로 학습시켜보기\n",
+        "# ① Decision Tree 학습\n",
+        "decision_tree = DecisionTreeClassifier(random_state=7)\n",
+        "decision_tree.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_tree = decision_tree.predict(X_test)  # 예측\n",
+        "print(\"Decision Tree Accuracy:\", accuracy_score(y_test, y_pred_tree))  # 평가\n",
+        "print(classification_report(y_test, y_pred_tree, target_names=data.target_names))\n",
+        "\n",
+        "# ② Random Forest 학습\n",
+        "random_forest = RandomForestClassifier(random_state=7)\n",
+        "random_forest.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_forest = random_forest.predict(X_test)  # 예측\n",
+        "print(\"Random Forest Accuracy:\", accuracy_score(y_test, y_pred_forest))  # 평가\n",
+        "print(classification_report(y_test, y_pred_forest, target_names=data.target_names))\n",
+        "\n",
+        "# ③ SVM 학습\n",
+        "svm = SVC(random_state=7)\n",
+        "svm.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_svm = svm.predict(X_test)  # 예측\n",
+        "print(\"SVM Accuracy:\", accuracy_score(y_test, y_pred_svm))  # 평가\n",
+        "print(classification_report(y_test, y_pred_svm, target_names=data.target_names))\n",
+        "\n",
+        "# ④ SGD Classifier 학습\n",
+        "sgd_classifier = SGDClassifier(random_state=7, max_iter=1000, tol=1e-3)\n",
+        "sgd_classifier.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_sgd = sgd_classifier.predict(X_test)  # 예측\n",
+        "print(\"SGD Classifier Accuracy:\", accuracy_score(y_test, y_pred_sgd))  # 평가\n",
+        "print(classification_report(y_test, y_pred_sgd, target_names=data.target_names))\n",
+        "\n",
+        "# ⑤ Logistic Regression 학습\n",
+        "logistic_regression = LogisticRegression(random_state=7, max_iter=1600)\n",
+        "logistic_regression.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_logistic = logistic_regression.predict(X_test)  # 예측\n",
+        "print(\"Logistic Regression Accuracy:\", accuracy_score(y_test, y_pred_logistic))  # 평가\n",
+        "print(classification_report(y_test, y_pred_logistic, target_names=data.target_names))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ptKxxjkBhOs6",
+        "outputId": "290c6788-2c38-423c-f393-19eb4b0b8c4e"
+      },
+      "execution_count": 94,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Decision Tree Accuracy: 0.9122807017543859\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "   malignant       0.92      0.82      0.87        40\n",
+            "      benign       0.91      0.96      0.93        74\n",
+            "\n",
+            "    accuracy                           0.91       114\n",
+            "   macro avg       0.91      0.89      0.90       114\n",
+            "weighted avg       0.91      0.91      0.91       114\n",
+            "\n",
+            "Random Forest Accuracy: 0.9736842105263158\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "   malignant       1.00      0.93      0.96        40\n",
+            "      benign       0.96      1.00      0.98        74\n",
+            "\n",
+            "    accuracy                           0.97       114\n",
+            "   macro avg       0.98      0.96      0.97       114\n",
+            "weighted avg       0.97      0.97      0.97       114\n",
+            "\n",
+            "SVM Accuracy: 0.9035087719298246\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "   malignant       1.00      0.72      0.84        40\n",
+            "      benign       0.87      1.00      0.93        74\n",
+            "\n",
+            "    accuracy                           0.90       114\n",
+            "   macro avg       0.94      0.86      0.89       114\n",
+            "weighted avg       0.92      0.90      0.90       114\n",
+            "\n",
+            "SGD Classifier Accuracy: 0.7280701754385965\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "   malignant       0.56      1.00      0.72        40\n",
+            "      benign       1.00      0.58      0.74        74\n",
+            "\n",
+            "    accuracy                           0.73       114\n",
+            "   macro avg       0.78      0.79      0.73       114\n",
+            "weighted avg       0.85      0.73      0.73       114\n",
+            "\n",
+            "Logistic Regression Accuracy: 0.9473684210526315\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "   malignant       1.00      0.85      0.92        40\n",
+            "      benign       0.93      1.00      0.96        74\n",
+            "\n",
+            "    accuracy                           0.95       114\n",
+            "   macro avg       0.96      0.93      0.94       114\n",
+            "weighted avg       0.95      0.95      0.95       114\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# (6) 모델을 평가해 보기\n",
+        "models = {\n",
+        "    \"Decision Tree\": decision_tree,\n",
+        "    \"Random Forest\": random_forest,\n",
+        "    \"SVM\": svm,\n",
+        "    \"SGD Classifier\": sgd_classifier,\n",
+        "    \"Logistic Regression\": logistic_regression\n",
+        "}\n",
+        "\n",
+        "for model_name, model in models.items():\n",
+        "    # 예측값 생성\n",
+        "    y_pred = model.predict(X_test)\n",
+        "\n",
+        "    # 정확도 평가\n",
+        "    accuracy = accuracy_score(y_test, y_pred)\n",
+        "    print(f\"{model_name} Accuracy:\", accuracy)\n",
+        "\n",
+        "#  가장 높은 정확도(0.9474)를 나타낸 Random Forest가 가장 나은 모델일 가능성이 크다고 생각함."
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "dEnLaIk4ygsz",
+        "outputId": "233fa872-a470-4fa9-d6a4-d7d5b339a3d1"
+      },
+      "execution_count": 101,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Decision Tree Accuracy: 0.9122807017543859\n",
+            "Random Forest Accuracy: 0.9736842105263158\n",
+            "SVM Accuracy: 0.9035087719298246\n",
+            "SGD Classifier Accuracy: 0.7280701754385965\n",
+            "Logistic Regression Accuracy: 0.9473684210526315\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "Pn_r9bhEs-8K"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "'''\n",
+        "# ⑤ Logistic Regression 학습\n",
+        "logistic_regression = LogisticRegression(random_state=7, max_iter=1000)\n",
+        "logistic_regression.fit(X_train, y_train)  # 모델 학습\n",
+        "y_pred_logistic = logistic_regression.predict(X_test)  # 예측\n",
+        "print(\"Logistic Regression Accuracy:\", accuracy_score(y_test, y_pred_logistic))  # 평가\n",
+        "print(classification_report(y_test, y_pred_logistic, target_names=data.target_names))\n",
+        "'''\n",
+        "# max_iter=1000으로 했을 때\n",
+        "# 1000번까지만.... 좀 더 최적화된 값을 찾으세요\n",
+        "# /usr/local/lib/python3.10/dist-packages/sklearn/linear_model/_logistic.py:469: ConvergenceWarning: lbfgs failed to converge (status=1):\n",
+        "# STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.\n",
+        "\n",
+        "# Increase the number of iterations (max_iter) or scale the data as shown in:\n",
+        "#     https://scikit-learn.org/stable/modules/preprocessing.html\n",
+        "# Please also refer to the documentation for alternative solver options:\n",
+        "#     https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression\n",
+        "#   n_iter_i = _check_optimize_result("
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 72
+        },
+        "id": "wkG0Ymv2s_eR",
+        "outputId": "898923b1-1dac-4f5a-f792-5c466ea62387"
+      },
+      "execution_count": 107,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'\\n# ⑤ Logistic Regression 학습\\nlogistic_regression = LogisticRegression(random_state=7, max_iter=1000)\\nlogistic_regression.fit(X_train, y_train)  # 모델 학습\\ny_pred_logistic = logistic_regression.predict(X_test)  # 예측\\nprint(\"Logistic Regression Accuracy:\", accuracy_score(y_test, y_pred_logistic))  # 평가\\nprint(classification_report(y_test, y_pred_logistic, target_names=data.target_names))\\n'"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 107
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "mryoGusMkFVb"
+      }
+    }
+  ]
+}
